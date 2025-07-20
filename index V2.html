@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Storage v2</title>
+    <style>
+        body.jour {
+            background-color: #f0f0f0;
+            color: black;
+            font-family: Arial, sans-serif;
+        }
+        body.nuit {
+            background-color: #333;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        #b1 {
+            background-color: #4CAF50; /* Vert pour le thème jour */
+            color: white;
+        }
+        #b2 {
+            background-color: #555; /* Gris pour le thème nuit */
+            color: white;
+        }
+        #textInput {
+            margin: 10px auto;
+            padding: 10px;
+            font-size: 16px;
+            display: block;
+            width: 80%;
+        }
+        #insertParagraphBtn {
+            background-color: #008CBA; /* Bleu pour le bouton ajouter */
+            color: white;
+            margin: 0 auto;
+            display: block;
+        }
+        p {
+            text-align: center;
+            font-size: 18px;
+        }
+        #paragraph {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body id="maPage" class="jour">
+    <h1>Choisissez un thème</h1>
+    <button id="b1">Jour</button>
+    <button id="b2">Nuit</button>
+
+    <p id="paragraph">Ceci est un exemple d'utilisation de l'API Local Storage de HTML5</p>
+
+    <input type="text" id="textInput" placeholder="Entrez un nouveau paragraphe">
+    <button id="insertParagraphBtn">Ajouter le paragraphe</button>
+
+    <script>
+        // Vérification du support de l'API LocalStorage
+        if (typeof(Storage) !== "undefined") {
+            console.log("LocalStorage est supporté !");
+        } else {
+            alert("Votre navigateur ne supporte pas l'API localStorage.");
+        }
+
+        // Fonction pour appliquer le thème
+        function appliquerTheme(theme) {
+            document.body.className = theme;
+            localStorage.setItem("theme", theme); // Sauvegarde le thème sélectionné
+        }
+
+        // Fonction pour ajouter un paragraphe
+        function ajouterParagraphe() {
+            var texte = document.getElementById("textInput").value;
+            if (texte) {
+                var p = document.createElement("p");
+                p.textContent = texte;
+                p.style.textAlign = "center"; // Assurer un alignement cohérent
+                p.style.fontSize = "18px";
+                document.body.appendChild(p);
+                localStorage.setItem("paragraphe", texte); // Sauvegarde le texte dans localStorage
+                document.getElementById("textInput").value = ""; // Réinitialiser le champ de saisie
+            } else {
+                alert("Veuillez entrer un texte.");
+            }
+        }
+
+        // Initialiser le thème et le paragraphe au chargement de la page
+        function initialiser() {
+            var theme = localStorage.getItem("theme");
+            if (!theme) {
+                theme = "jour"; // Par défaut, appliquer le thème jour
+            }
+            appliquerTheme(theme);
+
+            var texteParagraphe = localStorage.getItem("paragraphe");
+            if (texteParagraphe) {
+                var p = document.createElement("p");
+                p.textContent = texteParagraphe;
+                p.style.textAlign = "center"; // Assurer un alignement cohérent
+                p.style.fontSize = "18px";
+                document.body.appendChild(p);
+            }
+        }
+
+        // Ajouter des écouteurs d'événements pour les boutons
+        function ajouterEcouteurs() {
+            document.getElementById("b1").addEventListener("click", function() {
+                appliquerTheme("jour");
+            });
+            document.getElementById("b2").addEventListener("click", function() {
+                appliquerTheme("nuit");
+            });
+            document.getElementById("insertParagraphBtn").addEventListener("click", ajouterParagraphe);
+        }
+
+        // Initialiser la page
+        window.onload = function() {
+            initialiser();
+            ajouterEcouteurs();
+        };
+    </script>
+</body>
+</html>
